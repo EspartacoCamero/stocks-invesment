@@ -1,0 +1,13 @@
+---
+output:
+  data_folder: './data'
+  log_folder: './data/logs'
+
+stocks:
+  data: 'example_data.csv'
+  start: '2020-01-01'
+  end: '2020-08-01'
+  metric: 'Adj Close'
+  source: 'yahoo'
+model:
+  method: max_sharpe

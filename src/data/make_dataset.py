@@ -1,30 +1,43 @@
 # -*- coding: utf-8 -*-
-import click
+import os
 import logging
-from pathlib import Path
-from dotenv import find_dotenv, load_dotenv
+import pandas as pd
+import numpy as np
+import datetime as dt
+from utils import utils, logger_utils
+import yaml
 
-
-@click.command()
-@click.argument('input_filepath', type=click.Path(exists=True))
-@click.argument('output_filepath', type=click.Path())
-def main(input_filepath, output_filepath):
+def main():
     """ Runs data processing scripts to turn raw data from (../raw) into
         cleaned data ready to be analyzed (saved in ../processed).
     """
-    logger = logging.getLogger(__name__)
-    logger.info('making final data set from raw data')
+    
+    args = utils.get_args()
+    all_config = yaml.safe_load(open(args.config_file_path, "r"))
 
+    DATA = all_config['output']['data_folder']
+    input_data_path = all_config['stocks']['data']
+    logger = logger_utils.log_creator(all_config['output']['log_folder'], log_name='make_dataset')
+    
+    df_input_path = os.path.join('./src/data', input_data_path)
+    df_input = pd.read_csv(df_input_path)
+    logger.info("Reading tick and weights from %s" % df_input_path)
+    
+    ticks = df_input['TICK'].to_list()
+    if df_input['WEIGHT'].isna().sum():
+        logger.warning("Please check weights because there are missing values. Equals weight be stocks will be asigned")
+        n_stocks = df_input.shape[0]
+        weights = np.repeat(1/n_stocks, n_stocks)
+    else:
+        weights = df_input['WEIGHT'].to_list()
 
+    start_date = all_config['stocks']['start']
+    end_date = all_config['stocks']['end']
+    metric = all_config['stocks']['metric']
+    source = all_config['stocks']['source']
+    logger.info("Getting %s data from %s since %s to %s" % (metric, source, start_date, end_date))
+
+    df = utils.get_stock_data(ticks, start_date, end_date, metric, source)
+    logger.info("Data ready")
 if __name__ == '__main__':
-    log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    logging.basicConfig(level=logging.INFO, format=log_fmt)
-
-    # not used in this stub but often useful for finding various files
-    project_dir = Path(__file__).resolve().parents[2]
-
-    # find .env automagically by walking up directories until it's found, then
-    # load up the .env entries as environment variables
-    load_dotenv(find_dotenv())
-
     main()
