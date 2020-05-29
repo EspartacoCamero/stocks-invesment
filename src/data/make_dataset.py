@@ -12,6 +12,8 @@ def main():
         cleaned data ready to be analyzed (saved in ../processed).
     """
     
+    t0 = dt.datetime.now()
+
     args = utils.get_args()
     all_config = yaml.safe_load(open(args.config_file_path, "r"))
 
@@ -35,9 +37,21 @@ def main():
     end_date = all_config['stocks']['end']
     metric = all_config['stocks']['metric']
     source = all_config['stocks']['source']
-    logger.info("Getting %s data from %s since %s to %s" % (metric, source, start_date, end_date))
+    
+    logger.info("Getting data")
+    data_path = os.path.join(DATA, 'stocks_' + start_date.replace('-','') + '_' + end_date.replace('-',''))
+    if os.path.exists(data_path):
+        logger.info("Retrieving data from local path")
+        df = pd.read_csv(data_path)
+    else:
+        logger.info("Getting %s data from %s since %s to %s" % (metric, source, start_date, end_date))
+        df = utils.get_stock_data(ticks, start_date, end_date, metric, source)
+        df.to_csv(data_path)
 
-    df = utils.get_stock_data(ticks, start_date, end_date, metric, source)
-    logger.info("Data ready")
+    t1 = dt.datetime.now()
+    logger.info("Data is reaady to be used. It took %s seconds" % ((t1-t0).total_seconds()))
+
+
+
 if __name__ == '__main__':
     main()
