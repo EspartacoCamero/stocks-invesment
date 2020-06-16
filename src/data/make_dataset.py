@@ -26,6 +26,7 @@ def main():
     logger.info("Reading tick and weights from %s" % df_input_path)
     
     ticks = df_input['TICK'].to_list()
+
     if df_input['WEIGHT'].isna().sum():
         logger.warning("Please check weights because there are missing values. Equals weight be stocks will be asigned")
         n_stocks = df_input.shape[0]
@@ -35,22 +36,31 @@ def main():
 
     start_date = all_config['stocks']['start']
     end_date = all_config['stocks']['end']
+    if end_date is None:
+        end_date = dt.date.today().isoformat()
     metric = all_config['stocks']['metric']
     source = all_config['stocks']['source']
     
-    logger.info("Getting data")
-    data_path = os.path.join(DATA, 'stocks_' + start_date.replace('-','') + '_' + end_date.replace('-',''))
+    logger.info("Getting stock data and SP500 evolution")
+    #data_path = os.path.join(DATA, 'stocks_' + start_date.replace('-','') + '_' + end_date.replace('-',''))
+    data_path = utils.filename_maker('stocks_', DATA, start_date, end_date)
+    #data_sp_path = os.path.join(DATA, 'sp500_' + start_date.replace('-','') + '_' + end_date.replace('-',''))
+    data_sp_path = utils.filename_maker('sp500_', DATA, start_date, end_date)
+
     if os.path.exists(data_path):
         logger.info("Retrieving data from local path")
         df = pd.read_csv(data_path)
+        sp500 = pd.read_csv(data_sp_path)
     else:
         logger.info("Getting %s data from %s since %s to %s" % (metric, source, start_date, end_date))
         df = utils.get_stock_data(ticks, start_date, end_date, metric, source)
         df.to_csv(data_path)
+        logger.info("Getting %s SP500 data from %s since %s to %s" % (metric, source, start_date, end_date))
+        sp500 = utils.get_stock_data(['^GSPC'], start_date, end_date, metric, source)
+        sp500.to_csv(data_sp_path)
 
     t1 = dt.datetime.now()
     logger.info("Data is reaady to be used. It took %s seconds" % ((t1-t0).total_seconds()))
-
 
 
 if __name__ == '__main__':

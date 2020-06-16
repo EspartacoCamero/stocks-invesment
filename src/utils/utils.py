@@ -1,5 +1,7 @@
 from argparse import ArgumentParser
 import pandas_datareader as pdr
+import pandas as pd
+import os
 
 def get_args():
     """
@@ -20,3 +22,14 @@ def get_stock_data(stocks, start_date, end_date, col='Adj Close', source='yahoo'
     elif len(stocks)==1:
         df = pd.DataFrame(pdr.DataReader(stocks, source, start=start_date, end=end_date)[col], columns=stocks)
     return df
+
+def filename_maker(name: str, path: str, start_date, end_date) -> str:
+    """
+    Create the name of the main files
+
+    Returns:
+        String with the path to save the file.
+
+    """
+    return os.path.join(path, name + start_date.replace('-','') + '_' + end_date.replace('-',''))
+
