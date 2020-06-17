@@ -34,17 +34,12 @@ def main():
     else:
         weights = df_input['WEIGHT'].to_list()
 
-    start_date = all_config['stocks']['start']
-    end_date = all_config['stocks']['end']
-    if end_date is None:
-        end_date = dt.date.today().isoformat()
+    start_date, end_date = utils.get_start_end(all_config)
     metric = all_config['stocks']['metric']
     source = all_config['stocks']['source']
     
     logger.info("Getting stock data and SP500 evolution")
-    #data_path = os.path.join(DATA, 'stocks_' + start_date.replace('-','') + '_' + end_date.replace('-',''))
     data_path = utils.filename_maker('stocks_', DATA, start_date, end_date)
-    #data_sp_path = os.path.join(DATA, 'sp500_' + start_date.replace('-','') + '_' + end_date.replace('-',''))
     data_sp_path = utils.filename_maker('sp500_', DATA, start_date, end_date)
 
     if os.path.exists(data_path):

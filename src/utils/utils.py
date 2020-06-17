@@ -1,6 +1,7 @@
 from argparse import ArgumentParser
 import pandas_datareader as pdr
 import pandas as pd
+import datetime as dt
 import os
 
 def get_args():
@@ -33,3 +34,9 @@ def filename_maker(name: str, path: str, start_date, end_date) -> str:
     """
     return os.path.join(path, name + start_date.replace('-','') + '_' + end_date.replace('-',''))
 
+def get_start_end(yml_config):
+    start_date = yml_config['stocks']['start']
+    end_date = yml_config['stocks']['end']
+    if end_date is None:
+        end_date = dt.date.today().isoformat()
+    return start_date, end_date
