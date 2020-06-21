@@ -25,6 +25,14 @@ def main():
     df = pd.read_csv(data_path)
     sp = pd.read_csv(data_sp_path)
 
+    df['Date'] = pd.to_datetime(df['Date'])
+    df.set_index('Date', inplace=True)
+    df_pc = df.pct_change().dropna()
+
+    sp['Date'] = pd.to_datetime(sp['Date'])
+    sp.set_index('Date', inplace=True)
+    sp_pc = sp.pct_change().dropna()
+
     t1 = dt.datetime.now()
     #logger.info("Process finished. It took %s seconds" % ((t1-t0).total_seconds()))
 
