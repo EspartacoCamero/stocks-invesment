@@ -33,7 +33,6 @@ def main():
     sp.set_index('Date', inplace=True)
     sp_pc = sp.pct_change().dropna()
 
-    sp_pc.mean()
     t1 = dt.datetime.now()
     #logger.info("Process finished. It took %s seconds" % ((t1-t0).total_seconds()))
 
