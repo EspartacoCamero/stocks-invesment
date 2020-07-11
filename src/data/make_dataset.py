@@ -21,18 +21,9 @@ def main():
     input_data_path = all_config['stocks']['data']
     logger = logger_utils.log_creator(all_config['output']['log_folder'], log_name='make_dataset')
     
-    df_input_path = os.path.join('./src/data', input_data_path)
-    df_input = pd.read_csv(df_input_path)
-    logger.info("Reading tick and weights from %s" % df_input_path)
-    
-    ticks = df_input['TICK'].to_list()
-
-    if df_input['WEIGHT'].isna().sum():
-        logger.warning("Please check weights because there are missing values. Equals weight be stocks will be asigned")
-        n_stocks = df_input.shape[0]
-        weights = np.repeat(1/n_stocks, n_stocks)
-    else:
-        weights = df_input['WEIGHT'].to_list()
+    df_ticks_path = os.path.join('./src/data', input_data_path)
+    logger.info("Reading tick and weights from %s" % df_ticks_path)
+    weights = utils.get_ticks_data(df_ticks_path)
 
     start_date, end_date = utils.get_start_end(all_config)
     metric = all_config['stocks']['metric']

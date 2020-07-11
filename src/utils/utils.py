@@ -2,6 +2,7 @@ from argparse import ArgumentParser
 import pandas_datareader as pdr
 import pandas as pd
 import datetime as dt
+import numpy as np
 import os
 
 def get_args():
@@ -40,3 +41,25 @@ def get_start_end(yml_config):
     if end_date is None:
         end_date = dt.date.today().isoformat()
     return start_date, end_date
+
+def get_ticks_data(path) -> pd.DataFrame:
+    """
+    Read the initial ticks data that the user needs to upload
+
+    Returns:
+        DataFrame with ticks and weights
+
+    """
+
+    df_input = pd.read_csv(path) 
+    ticks = df_input['TICK'].to_list()
+
+    if df_input['WEIGHT'].isna().sum():
+        # logger.warning("Please check weights because there are missing values. Equals weights to stocks will be asigned")
+        n_stocks = df_input.shape[0]
+        weights = np.repeat(1/n_stocks, n_stocks)
+        df_input['WEIGHT'] = weights
+    else:
+        weights = df_input['WEIGHT'].to_list()
+
+    return df_input
