@@ -1,5 +1,6 @@
 import pandas as pd
 import logging
+import numpy as np
 import datetime as dt
 from utils import utils, logger_utils
 import yaml
@@ -36,6 +37,22 @@ def main():
     sp['Date'] = pd.to_datetime(sp['Date'])
     sp.set_index('Date', inplace=True)
     sp_pc = sp.pct_change().dropna()
+
+    weights_np = weights['WEIGHT'].to_numpy()
+
+    anual_cov_matrix = df_pc.cov()*252
+    volatilidad_por_anual = np.sqrt(np.dot(weights_np.T, np.dot(anual_cov_matrix, weights_np)))
+    logger.info("Anual portafolio volatility is %.2f" % volatilidad_por_anual)
+
+    portafolio_anual_return = np.sum(df_pc.mean()*weights_np)*252
+    logger.info("Anual portafolio return is %.2f" % portafolio_anual_return)
+
+    
+    logger.info("Mean historical return for each stock %s" % round((df_pc.mean()*252),2))
+    logger.info("Anual volatility for each stock %s" % round(np.std(df_pc)*np.sqrt(252),2))
+    
+    # np.sum(df_pc.mean()*weights['WEIGHT'].to_numpy())*252
+    
 
     t1 = dt.datetime.now()
     #logger.info("Process finished. It took %s seconds" % ((t1-t0).total_seconds()))

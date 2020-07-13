@@ -14,7 +14,7 @@ def main():
     
     t0 = dt.datetime.now()
 
-    args = utils.get_args()
+    args = utils.get_armgs()
     all_config = yaml.safe_load(open(args.config_file_path, "r"))
 
     DATA = all_config['output']['data_folder']
@@ -23,7 +23,7 @@ def main():
     
     df_ticks_path = os.path.join('./src/data', input_data_path)
     logger.info("Reading tick and weights from %s" % df_ticks_path)
-    weights = utils.get_ticks_data(df_ticks_path)
+    ticks = utils.get_ticks_data(df_ticks_path)
 
     start_date, end_date = utils.get_start_end(all_config)
     metric = all_config['stocks']['metric']
@@ -39,7 +39,7 @@ def main():
         sp500 = pd.read_csv(data_sp_path)
     else:
         logger.info("Getting %s data from %s since %s to %s" % (metric, source, start_date, end_date))
-        df = utils.get_stock_data(ticks, start_date, end_date, metric, source)
+        df = utils.get_stock_data(ticks['TICK'].to_list(), start_date, end_date, metric, source)
         df.to_csv(data_path)
         logger.info("Getting %s SP500 data from %s since %s to %s" % (metric, source, start_date, end_date))
         sp500 = utils.get_stock_data(['^GSPC'], start_date, end_date, metric, source)
