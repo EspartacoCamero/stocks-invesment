@@ -5,7 +5,7 @@ output:
 
 stocks:
   data: 'example_data.csv'
-  start: '2020-01-01'
+  start: '2017-01-01'
   end: null
   metric: 'Adj Close'
   source: 'yahoo'

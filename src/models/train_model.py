@@ -3,6 +3,7 @@ import logging
 import numpy as np
 import datetime as dt
 from utils import utils, logger_utils
+from scipy.stats import skew, kurtosis, shapiro
 import yaml
 import os
 
@@ -52,8 +53,33 @@ def main():
     logger.info("Anual volatility for each stock %s" % round(np.std(df_pc)*np.sqrt(252),2))
     
     # np.sum(df_pc.mean()*weights['WEIGHT'].to_numpy())*252
-    
+    ticks = weights['TICK'].to_list()
+    skew_list = []
+    kurtosis_list = []
+    shapiro_list = []
+    annual_vol = []
+    annual_returns = []
+    for tk in ticks:
+        skewness = np.round(df_pc[tk].skew(), 3)
+        kurt = np.round(df_pc[tk].kurtosis() + 3, 3)
+        shap = np.round(shapiro(df_pc[tk])[1], 3)
+        vol = np.round(df_pc[tk].std()*np.sqrt(252), 3)
+        rtn = np.round((df_pc[tk].mean()*252), 3)
+        
+        skew_list.append(skewness)
+        kurtosis_list.append(kurt)
+        shapiro_list.append(shap)
+        annual_vol.append(vol)
+        annual_returns.append(rtn)
 
+    stocks_summary = pd.DataFrame({'STOCK': ticks,
+                                   'SKEW': skew_list,
+                                   'KURTOSIS': kurtosis_list,
+                                   'SHAPIRO': shapiro_list,
+                                   'ANNUAL_VOL': annual_vol,
+                                   'ANNUAL_RETURN': annual_returns})
+
+    logger.info(stocks_summary)
     t1 = dt.datetime.now()
     #logger.info("Process finished. It took %s seconds" % ((t1-t0).total_seconds()))
 

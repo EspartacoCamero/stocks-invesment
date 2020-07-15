@@ -14,7 +14,7 @@ def main():
     
     t0 = dt.datetime.now()
 
-    args = utils.get_armgs()
+    args = utils.get_args()
     all_config = yaml.safe_load(open(args.config_file_path, "r"))
 
     DATA = all_config['output']['data_folder']
