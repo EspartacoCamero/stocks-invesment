@@ -72,12 +72,14 @@ def main():
         annual_vol.append(vol)
         annual_returns.append(rtn)
 
+    logger.info("This is the summary of the stocks regaridn the anual return, anual volatility, kurtosis, shapiro and skew.")
     stocks_summary = pd.DataFrame({'STOCK': ticks,
                                    'SKEW': skew_list,
                                    'KURTOSIS': kurtosis_list,
                                    'SHAPIRO': shapiro_list,
                                    'ANNUAL_VOL': annual_vol,
                                    'ANNUAL_RETURN': annual_returns})
+    stocks_summary.set_index('STOCK', inplace=True)
 
     logger.info(stocks_summary)
     t1 = dt.datetime.now()
