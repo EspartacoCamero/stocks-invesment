@@ -8,7 +8,7 @@ import yaml
 import os
 
 def main():
-    """ Runs the main descriptive stadistict about stocks and also get optimar portafolio
+    """ Runs the main descriptive stadistict about stocks and also get optimal portafolio
     """
         
     t0 = dt.datetime.now()
