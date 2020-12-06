@@ -6,6 +6,9 @@ from utils import utils, logger_utils
 from scipy.stats import skew, kurtosis, shapiro
 import yaml
 import os
+from pypfopt import risk_models
+from pypfopt import expected_returns
+from pypfopt.efficient_frontier import EfficientFrontier
 
 def main():
     """ Runs the main descriptive stadistict about stocks and also get optimal portafolio
@@ -72,7 +75,7 @@ def main():
         annual_vol.append(vol)
         annual_returns.append(rtn)
 
-    logger.info("This is the summary of the stocks regaridn the anual return, anual volatility, kurtosis, shapiro and skew.")
+    logger.info("This is the summary of the stocks regarding the anual return, anual volatility, kurtosis, shapiro and skew.")
     stocks_summary = pd.DataFrame({'STOCK': ticks,
                                    'SKEW': skew_list,
                                    'KURTOSIS': kurtosis_list,
@@ -82,6 +85,35 @@ def main():
     stocks_summary.set_index('STOCK', inplace=True)
 
     logger.info(stocks_summary)
+
+    logger.info("Lets now calculate the anual covariance between stoks")
+    cov_matriz = df_pc.cov()*252
+    logger.info(cov_matriz)
+
+    logger.info("Using Python Portafolio")
+    mu = expected_returns.mean_historical_return(df) 
+    sigma = risk_models.sample_cov(df)
+    ef = EfficientFrontier(mu, sigma)
+    
+    logger.info("Showing portafolio with max sharpe rate")
+    raw_weights_maxsharpe = ef.max_sharpe()
+    cleaned_weights_maxsharpe = ef.clean_weights()
+    logger.info(cleaned_weights_maxsharpe)
+    # Show portfolio performance 
+    logger.info(ef.portfolio_performance(verbose=True))
+
+    desire_return = 0.20
+    ef.efficient_return(desire_return)
+    logger.info("Calculating portafolio which should bring a return of  %s" % desire_return)
+    logger.info(ef.clean_weights())
+
+    logger.info("Showing portafolio with lowest risk for a return of %s" % desire_return)
+    raw_weights_minvol = ef.min_volatility()
+    cleaned_weights_minvol = ef.clean_weights()
+    logger.info(cleaned_weights_minvol)
+    logger.info(ef.portfolio_performance(verbose=True))
+
+
     t1 = dt.datetime.now()
     #logger.info("Process finished. It took %s seconds" % ((t1-t0).total_seconds()))
 
