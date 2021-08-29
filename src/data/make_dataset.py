@@ -6,6 +6,9 @@ import numpy as np
 import datetime as dt
 from utils import utils, logger_utils
 import yaml
+from pandas_datareader import data as pdr
+import yfinance as yfin
+yfin.pdr_override()
 
 def main():
     """ Runs data processing scripts to turn raw data from (../raw) into
@@ -39,10 +42,10 @@ def main():
         sp500 = pd.read_csv(data_sp_path)
     else:
         logger.info("Getting %s data from %s since %s to %s" % (metric, source, start_date, end_date))
-        df = utils.get_stock_data(ticks['TICK'].to_list(), start_date, end_date, metric, source)
+        df = utils.get_stock_data(ticks['TICK'].to_list(), start_date, end_date, metric)
         df.to_csv(data_path)
         logger.info("Getting %s SP500 data from %s since %s to %s" % (metric, source, start_date, end_date))
-        sp500 = utils.get_stock_data(['^GSPC'], start_date, end_date, metric, source)
+        sp500 = utils.get_stock_data(['^GSPC'], start_date, end_date, metric)
         sp500.to_csv(data_sp_path)
 
     t1 = dt.datetime.now()

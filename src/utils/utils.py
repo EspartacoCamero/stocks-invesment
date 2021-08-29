@@ -4,6 +4,9 @@ import pandas as pd
 import datetime as dt
 import numpy as np
 import os
+from pandas_datareader import data as pdr
+import yfinance as yfin
+yfin.pdr_override()
 
 def get_args():
     """
@@ -18,11 +21,8 @@ def get_args():
 
     return args
 
-def get_stock_data(stocks, start_date, end_date, col='Adj Close', source='yahoo'):
-    if len(stocks)>1:
-        df = pdr.DataReader(stocks, source, start=start_date, end=end_date)[col]
-    elif len(stocks)==1:
-        df = pd.DataFrame(pdr.DataReader(stocks, source, start=start_date, end=end_date)[col], columns=stocks)
+def get_stock_data(stock, start_date, end_date, col='Adj Close'):
+    df = pdr.get_data_yahoo(stock, start=start_date, end=end_date)[col]
     return df
 
 def filename_maker(name: str, path: str, start_date, end_date) -> str:
