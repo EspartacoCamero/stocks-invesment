@@ -38,6 +38,11 @@ def filename_maker(name: str, path: str, start_date, end_date) -> str:
 def get_start_end(yml_config):
     start_date = yml_config['stocks']['start']
     end_date = yml_config['stocks']['end']
+
+    if isinstance(start_date, int):
+        start_date = dt.date.today() - dt.timedelta(start_date)
+        start_date = start_date.isoformat()
+
     if end_date is None:
         end_date = dt.date.today().isoformat()
     return start_date, end_date
