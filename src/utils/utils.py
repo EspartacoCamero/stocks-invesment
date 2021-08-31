@@ -57,9 +57,11 @@ def get_ticks_data(path) -> pd.DataFrame:
     """
 
     df_input = pd.read_csv(path) 
-    ticks = df_input['TICK'].to_list()
+    cols = df_input.columns.to_list()
+    if 'TICK' not in cols:
+        raise Exception("No TICK column, please add it or rename it")
 
-    if df_input['WEIGHT'].isna().sum():
+    if df_input['WEIGHT'path].isna().sum():
         # logger.warning("Please check weights because there are missing values. Equals weights to stocks will be asigned")
         n_stocks = df_input.shape[0]
         weights = np.repeat(1/n_stocks, n_stocks)
