@@ -2,6 +2,9 @@ import pandas as pd
 import logging
 import numpy as np
 import datetime as dt
+from utils import utils, logger_utils
+import yaml
+import os
 
 
 def main():
@@ -13,7 +16,7 @@ def main():
 
     DATA = all_config['output']['data_folder']
     input_data_path = all_config['stocks']['data']
-    logger = logger_utils.log_creator(all_config['output']['log_folder'], log_name='ticks_off')
+    logger = logger_utils.log_creator(all_config['output']['log_folder'], log_name='offsales')
     start_date, end_date = utils.get_start_end(all_config)
 
     df_ticks_path = os.path.join('./src/data', input_data_path)
@@ -23,6 +26,10 @@ def main():
     data_path = utils.filename_maker('stocks_', DATA, start_date, end_date)
     df = pd.read_csv(data_path)
 
+
+
+
+    t1 = dt.datetime.now()
 
 if __name__ == "__main__":
     main()
