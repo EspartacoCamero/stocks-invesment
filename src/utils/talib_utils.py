@@ -1,14 +1,14 @@
 import talib
 
 
-def ema(df_col, rolling):
+def ema(df_col, rolling=12):
     """
 
     Args:
-      df_col: 
-      rolling: 
+      df_col: variable to apply the ema analysis
+      rolling: (Default value = 12) window for the ema, normally between 12 and 26
 
-    Returns:
+    Returns: ema calculation column
 
     
     """
@@ -18,9 +18,9 @@ def rsi(df_col):
     """
 
     Args:
-      df_col: 
+      df_col: variable to apply the rsi analysis
 
-    Returns:
+    Returns: rsi calculation
 
     
     """
@@ -30,12 +30,12 @@ def bbands(df_col, sd_up=1, sd_dn=1, time=20):
     """
 
     Args:
-      df_col: 
-      sd_up: (Default value = 1)
-      sd_dn: (Default value = 1)
-      time: (Default value = 20)
+      df_col: variable to apply the rsi analysis
+      sd_up: (Default value = 1) standar deviation for the upper value
+      sd_dn: (Default value = 1) standar deviation for the lower value
+      time: (Default value = 20) is the window period for the sma
 
-    Returns:
+    Returns: 3 variables: upper, mid and lower interval for bollinger bands
 
     
     """
