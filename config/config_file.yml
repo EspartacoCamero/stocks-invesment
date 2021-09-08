@@ -11,3 +11,12 @@ stocks:
   source: 'yahoo'
 model:
   method: max_sharpe
+  kpis:
+    - rsi
+    - sma:
+      - 12
+      - 24
+    - bbands:
+      - 1   # std upper
+      - 1   # std lower
+      - 20  # sma
