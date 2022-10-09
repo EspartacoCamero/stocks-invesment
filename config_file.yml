@@ -20,3 +20,7 @@ model:
       - 1   # std upper
       - 1   # std lower
       - 20  # sma
+    - ema:
+      - 12  # low
+      - 26  # high
+      - 50

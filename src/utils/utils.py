@@ -72,7 +72,7 @@ def get_ticks_data(path) -> pd.DataFrame:
 
     return df_input
 
-def get_metrics(df):
+def get_metrics(df, kpi_config) -> pd.DataFrame:
     """
     Recieve a DataFrame with all the stock ticks to analyze (with historical values)
 
@@ -80,7 +80,17 @@ def get_metrics(df):
         DataFrame with tickes and main KPIs
 
     """
-    df_clean = pd.DataFrame(columns=['price', 'stock', 'rsi', 'ema_12', 'ema_26', 'bb_low', 'bb_mid', 'bb_up'])
+    for i in kpi_config:
+        if isinstance(i, dict):
+            if list(i.keys())[0] == 'sma':
+                sma = i
+            if list(i.keys())[0] == 'bbands':
+                bbands = i
+            if list(i.keys())[0] == 'ema':
+                ema = i
+
+
+    df_clean = pd.DataFrame(columns=['price', 'stock', 'rsi', 'ema_low', 'ema_high',  'bb_low', 'bb_mid', 'bb_up'])
     
     for col in df.columns.to_list():
         df_aux = pd.DataFrame()
@@ -88,10 +98,9 @@ def get_metrics(df):
         df_aux.columns = ['price']
         df_aux['stock'] = col
         df_aux['rsi'] = talib.RSI(df.loc[:, col])
-        df_aux['ema_12'] = talib.EMA(df.loc[:, col], 12)
-        df_aux['ema_26'] = talib.EMA(df.loc[:, col], 26)
-        df_aux['ema_50'] = talib.EMA(df.loc[:, col], 50)
-        upper_1sd, mid_1sd, lower_1sd = talib.BBANDS(df.loc[:, col], nbdevup=1, nbdevdn=1, timeperiod=20)
+        df_aux['ema_low'] = talib.EMA(df.loc[:, col], ema['ema'][0])
+        df_aux['ema_high'] = talib.EMA(df.loc[:, col], ema['ema'][1])
+        upper_1sd, mid_1sd, lower_1sd = talib.BBANDS(df.loc[:, col], nbdevup=bbands['bbands'][0], nbdevdn=bbands['bbands'][1], timeperiod=bbands['bbands'][2])
         df_aux['bb_low'] = upper_1sd
         df_aux['bb_mid'] = mid_1sd
         df_aux['bb_up'] = lower_1sd
