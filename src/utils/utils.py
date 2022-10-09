@@ -6,6 +6,7 @@ import numpy as np
 import os
 from pandas_datareader import data as pdr
 import yfinance as yfin
+import talib
 yfin.pdr_override()
 
 def get_args():
@@ -70,3 +71,30 @@ def get_ticks_data(path) -> pd.DataFrame:
         weights = df_input['WEIGHT'].to_list()
 
     return df_input
+
+def get_metrics(df):
+    """
+    Recieve a DataFrame with all the stock ticks to analyze (with historical values)
+
+    Returns:
+        DataFrame with tickes and main KPIs
+
+    """
+    df_clean = pd.DataFrame(columns=['price', 'stock', 'rsi', 'ema_12', 'ema_26', 'bb_low', 'bb_mid', 'bb_up'])
+    
+    for col in df.columns.to_list():
+        df_aux = pd.DataFrame()
+        df_aux = df[[col]]
+        df_aux.columns = ['price']
+        df_aux['stock'] = col
+        df_aux['rsi'] = talib.RSI(df.loc[:, col])
+        df_aux['ema_12'] = talib.EMA(df.loc[:, col], 12)
+        df_aux['ema_26'] = talib.EMA(df.loc[:, col], 26)
+        df_aux['ema_50'] = talib.EMA(df.loc[:, col], 50)
+        upper_1sd, mid_1sd, lower_1sd = talib.BBANDS(df.loc[:, col], nbdevup=1, nbdevdn=1, timeperiod=20)
+        df_aux['bb_low'] = upper_1sd
+        df_aux['bb_mid'] = mid_1sd
+        df_aux['bb_up'] = lower_1sd
+        df_clean = df_clean.append(df_aux)
+    
+    return df_clean
