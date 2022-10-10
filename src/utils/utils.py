@@ -80,17 +80,26 @@ def get_metrics(df, kpi_config) -> pd.DataFrame:
         DataFrame with tickes and main KPIs
 
     """
+    columns = ['price', 'stock']
     for i in kpi_config:
-        if isinstance(i, dict):
-            if list(i.keys())[0] == 'sma':
-                sma = i
-            if list(i.keys())[0] == 'bbands':
+        dict_key = list(i.keys())
+        if dict_key[0] == 'rsi':
+            if i['rsi'][0]==True:
+                columns.append('rsi')
+        if dict_key[0] == 'sma':
+            if i['sma'][0]==True:
+                columns = columns + ['sma_low', 'sma_up']
+                sma= i
+        if dict_key[0] == 'bbands':
+            if i['bbands'][0]==True:
+                columns = columns + ['bb_low', 'bb_mid', 'bb_up']
                 bbands = i
-            if list(i.keys())[0] == 'ema':
+        if dict_key[0] == 'ema':
+            if i['ema'][0]==True:
+                columns = columns + ['ema_low', 'ema_up']
                 ema = i
 
-
-    df_clean = pd.DataFrame(columns=['price', 'stock', 'rsi', 'ema_low', 'ema_high',  'bb_low', 'bb_mid', 'bb_up'])
+    df_clean = pd.DataFrame(columns=columns)
     
     for col in df.columns.to_list():
         df_aux = pd.DataFrame()
@@ -98,9 +107,9 @@ def get_metrics(df, kpi_config) -> pd.DataFrame:
         df_aux.columns = ['price']
         df_aux['stock'] = col
         df_aux['rsi'] = talib.RSI(df.loc[:, col])
-        df_aux['ema_low'] = talib.EMA(df.loc[:, col], ema['ema'][0])
-        df_aux['ema_high'] = talib.EMA(df.loc[:, col], ema['ema'][1])
-        upper_1sd, mid_1sd, lower_1sd = talib.BBANDS(df.loc[:, col], nbdevup=bbands['bbands'][0], nbdevdn=bbands['bbands'][1], timeperiod=bbands['bbands'][2])
+        df_aux['ema_low'] = talib.EMA(df.loc[:, col], ema['ema'][1])
+        df_aux['ema_high'] = talib.EMA(df.loc[:, col], ema['ema'][2])
+        upper_1sd, mid_1sd, lower_1sd = talib.BBANDS(df.loc[:, col], nbdevup=bbands['bbands'][1], nbdevdn=bbands['bbands'][2], timeperiod=bbands['bbands'][3])
         df_aux['bb_low'] = upper_1sd
         df_aux['bb_mid'] = mid_1sd
         df_aux['bb_up'] = lower_1sd

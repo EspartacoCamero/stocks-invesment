@@ -12,15 +12,19 @@ stocks:
 model:
   method: max_sharpe
   kpis:
-    - rsi
+    - rsi:
+      - True
     - sma:
+      - False
       - 12
       - 24
     - bbands:
+      - True
       - 1   # std upper
       - 1   # std lower
       - 20  # sma
     - ema:
+      - True
       - 12  # low
       - 26  # high
       - 50
