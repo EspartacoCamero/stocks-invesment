@@ -3,7 +3,7 @@ import requests
 class Tabot:
     BOT_URL = 'https://api.telegram.org/bot'
 
-    def __init__(self, chat_token, chat_id):
+    def __init__(self, chat_token, chat_id = None):
         self.chat_token = chat_token
         self.chat_id = chat_id
 
@@ -12,8 +12,12 @@ class Tabot:
 
     def get_chat_id(self):
         url = Tabot.BOT_URL + str(self.chat_token) + '/getUpdates'
-        #response = requests.get('https://api.telegram.org/bot5675115970:AAFxftIMTUwBrJtOMRfPZjI3e3_3kFy0YKU/getUpdates')
         response = requests.get(url)
         print(url)
 
-        return response.json()['result'][0]['message']['chat']['id']
+        self.chat_id = response.json()['result'][0]['message']['chat']['id']
+
+    def send_message(self, text = ''):
+        url = Tabot.BOT_URL + str(self.chat_token) + '/sendMessage?chat_id=' + str(self.chat_id) +'&text=' + text 
+        print(url)
+        requests.get(url)
