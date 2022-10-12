@@ -29,6 +29,6 @@ model:
       - 26  # high
       - 50
 bot:
-  chat_id:
-  token_id:
+  chat_token: None
+  chat_id: None
 
