@@ -13,11 +13,8 @@ class Tabot:
     def get_chat_id(self):
         url = Tabot.BOT_URL + str(self.chat_token) + '/getUpdates'
         response = requests.get(url)
-        print(url)
-
         self.chat_id = response.json()['result'][0]['message']['chat']['id']
 
     def send_message(self, text = ''):
         url = Tabot.BOT_URL + str(self.chat_token) + '/sendMessage?chat_id=' + str(self.chat_id) +'&text=' + text 
-        print(url)
         requests.get(url)
