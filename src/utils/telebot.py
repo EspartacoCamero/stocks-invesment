@@ -15,6 +15,16 @@ class Tabot:
         response = requests.get(url)
         self.chat_id = response.json()['result'][0]['message']['chat']['id']
 
-    def send_message(self, text = ''):
+    def check_bot(self):
+        url = Tabot.BOT_URL + str(self.chat_token) + '/getUpdates'
+        print(requests.get(url))
+
+    def send_message(self, text):
+        if self.chat_id is None:
+            raise Exception("Chat id is missing. Run 'get_chat_id' method or provide the chat id when creating the object")
+        
+        if not isinstance(text, str):
+            raise Exception('Message needs to be a string')
+
         url = Tabot.BOT_URL + str(self.chat_token) + '/sendMessage?chat_id=' + str(self.chat_id) +'&text=' + text 
         requests.get(url)
