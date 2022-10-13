@@ -1,42 +1,52 @@
 stocks-invesment
 ==============================
 
-This project will tell you where to invest your money according to your prefered stocks
+This project will tell you where to invest your money according to your prefered stocks right away in your Telegram APP.
 
-Project Organization
-------------
-
-    ├── LICENSE
-    ├── Makefile           <- Makefile with commands like `make data` or `make train`
-    ├── README.md          <- The top-level README for developers using this project.
-    ├── data
-    │   ├── external       <- Data from third party sources.
-    │   ├── interim        <- Intermediate data that has been transformed.
-    │   ├── processed      <- The final, canonical data sets for modeling.
-    │   └── raw            <- The original, immutable data dump.
-    │
-    ├── docs               <- A default Sphinx project; see sphinx-doc.org for details
-    │
-    ├── notebooks          <- Jupyter notebooks
-    │
-    ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-    │                         generated with `pip freeze > requirements.txt`
-    │
-    ├── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
-    ├── src                <- Source code for use in this project.
-    │   ├── __init__.py    <- Makes src a Python module
-    │   │
-    │   ├── data           <- Scripts to download or generate data
-    │   │   └── make_dataset.py
-    │   │
-    │   ├── models         <- Scripts to train models and then use trained models to make
-    │   │   │                 predictions
-    │   │   ├── predict_model.py
-    │   │   └── train_model.py
-    │
-    └── tox.ini            <- tox file with settings for running tox; see tox.testrun.org
+The stock recommendations is based on the follwing indicators:
+- **Trend:** MA or EMA
+- **Momemtun:** RSI
+- **Volatility:** Bollinger Bands
+- **Strength:** ADX (Not implemented yet)
 
 
---------
+####  Flow:
+- Load which ticks you want to analyze.
+- Create your strategy, for example, having a RSI <= 30, and/or a EMA12 < EMA26, etc.
+- Recieve which stocks satisfied tose condition in a daily (weekly?, monthly?) based Telegram message.
 
-<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
+
+
+#### Steps:
+1. A CSV file  your own tick selections and you strategy.
+2. You need a Telegram account where the alerts will be send. Check details bellow
+3. Create a cron process in you computer. Check details bellow.
+
+
+
+
+
+**Step 1: Ticks and strategy**
+
+
+**Step 2: Telegram setup:**
+
+Within your Telegram account, look for *BotFather* contact and open a chat with him.
+Now, write him the following messages:
+```
+/start
+/newbot
+```
+
+And then asigne a name and a nickname for you bot. Check and save the token generated for your bot. You will use it later.
+Now, create a Telegram group and add your new bot to the chat by the name you gave him. 
+To make sure the bot is active and to create a chat_id for this Telegram group, write the following message.
+
+```
+/my_id @<bot name>
+```
+
+Done! You already have a group where you will receive your notifications. You can invite anyone to this group
+
+
+**Step 3: Cron setup:**
