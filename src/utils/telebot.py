@@ -11,9 +11,14 @@ class Tabot:
         return "Tabot with chat token: {token} and chat_id {chat_id}".format(token=self.chat_token, chat_id=self.chat_id)
 
     def get_chat_id(self):
-        url = Tabot.BOT_URL + str(self.chat_token) + '/getUpdates'
-        response = requests.get(url)
-        self.chat_id = response.json()['result'][0]['message']['chat']['id']
+        try:
+            url = Tabot.BOT_URL + str(self.chat_token) + '/getUpdates'
+            response = requests.get(url)
+            self.chat_id = response.json()['result'][0]['message']['chat']['id']
+        except IndexError as ex1:
+            print("Error " + str(ex1))
+            print("Check if chat group at Telegrams was created with Tabot was created. Also make sure to send a message to activate the chat")
+
 
     def check_bot(self):
         url = Tabot.BOT_URL + str(self.chat_token) + '/getUpdates'
