@@ -108,7 +108,7 @@ def get_metrics(df, kpi_config) -> pd.DataFrame:
         df_aux['stock'] = col
         df_aux['rsi'] = talib.RSI(df.loc[:, col])
         df_aux['ema_low'] = talib.EMA(df.loc[:, col], ema['ema'][1])
-        df_aux['ema_high'] = talib.EMA(df.loc[:, col], ema['ema'][2])
+        df_aux['ema_up'] = talib.EMA(df.loc[:, col], ema['ema'][2])
         upper_1sd, mid_1sd, lower_1sd = talib.BBANDS(df.loc[:, col], nbdevup=bbands['bbands'][1], nbdevdn=bbands['bbands'][2], timeperiod=bbands['bbands'][3])
         df_aux['bb_low'] = upper_1sd
         df_aux['bb_mid'] = mid_1sd
