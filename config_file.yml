@@ -28,7 +28,13 @@ model:
       - 12  # low
       - 26  # high
       - 50
-bot:
-  chat_token: None
-  chat_id: None
+strategy:
+  rsi_lt:
+    - True
+    - 35  # lt: lower thab
+  bbands: True
+  ema_crossover: False
+  ema_crossover: True
+  flags_het: 3 # het: higher or equan than
+
 

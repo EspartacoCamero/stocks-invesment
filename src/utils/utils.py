@@ -116,3 +116,29 @@ def get_metrics(df, kpi_config) -> pd.DataFrame:
         df_clean = df_clean.append(df_aux)
     
     return df_clean
+
+def get_flags(df_clean, strategy) -> pd.DataFrame:
+    """
+    Recieve a DataFrame with all the stock ticks with their KPIs (RSI, EMA, etc)
+
+    Returns:
+        DataFrame with flags based on strategy and the final score
+    
+    """  
+    date_max = (max(df_clean.index)).strftime("%Y-%m-%d")
+
+    if strategy['rsi_lt'][0]:
+        df_clean['rsi_f'] = np.where(df_clean['rsi'] <= strategy['rsi_lt'][1], 1, 0)
+
+    if strategy['bbands']:
+        df_clean['bb_f'] = np.where(df_clean['price'] <= df_clean['bb_low'], 1, 0)
+
+    if strategy['ema_crossover']:
+        df_clean['ema_f'] = np.where(df_clean['ema_low'] <= df_clean['ema_up'], 1, 0)
+
+    df_clean['score'] = df_clean['ema_f'] + df_clean['rsi_f'] + df_clean['bb_f']
+
+    df_flags = df_clean[(df_clean['score'] >= strategy['flags_het']) & (df_clean.index==date_max)]
+    df_flags= df_flags.sort_values('score', ascending=False)
+
+    return df_flags
