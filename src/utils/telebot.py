@@ -17,7 +17,7 @@ class Tabot:
             self.chat_id = response.json()['result'][0]['message']['chat']['id']
         except IndexError as ex1:
             print("Error " + str(ex1))
-            print("Check if chat group at Telegrams was created with Tabot was created. Also make sure to send a message to activate the chat")
+            print("Check if chat group at Telegram was created with Tabot in it. Also make sure to send a message to activate the chat")
 
 
     def check_bot(self):
