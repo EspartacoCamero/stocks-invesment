@@ -14,10 +14,14 @@ FILE_PATH = os.path.abspath(os.path.dirname(__file__))
 
 t0 = dt.datetime.now()
 all_config = yaml.safe_load(open(os.path.join(FILE_PATH, "../config_file.yml"), "r"))
-logger = logger_utils.log_creator(all_config['output']['log_folder'], log_name='tabot')
+
+logger_path = os.path.join(FILE_PATH, all_config['output']['log_folder'])
+logger = logger_utils.log_creator(logger_path, log_name='tabot')
 
 logger.info("Reading tick data")
 df_input = utils.get_ticks_data(os.path.join(FILE_PATH, 'data/example_data.csv'))
+
+logger.info(logger_path)
 
 start_date, end_date = utils.get_start_end(all_config)
 source = all_config['stocks']['source']

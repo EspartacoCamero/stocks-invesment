@@ -1,7 +1,7 @@
 ---
 output:
-  data_folder: './data'
-  log_folder: './data/logs'
+  data_folder: 'data'
+  log_folder: 'data/logs'
 
 stocks:
   data: 'example_data.csv'
@@ -36,5 +36,7 @@ strategy:
   ema_crossover: False
   ema_crossover: True
   flags_het: 3 # het: higher or equan than
-
+bot:
+  chat_token: None
+  chat_id: None
 
