@@ -1,9 +1,15 @@
 stocks-invesment
 ==============================
 
-This project will tell you where to invest your money according to your prefered stocks right away in your Telegram APP.
+This ETL project will tell you where to invest your money according to your prefered stocks right away in your Telegram APP.
+The process is divided in three simple steps:
 
-The stock recommendations is based on the follwing indicators:
+![ETL](https://github.com/EspartacoCamero/stocks-invesment/blob/master/etl-stocks.jpg?)
+
+We get the data from yahoo, transformed with Pandas and delivered to Telegram. Everything was built using Python.
+
+
+Regarding the strategy about what stocks are sent, recommendations is based on the following indicators:
 - **Trend:** MA or EMA
 - **Momemtun:** RSI
 - **Volatility:** Bollinger Bands
