@@ -46,11 +46,13 @@ Now, write him the following messages:
 
 And then asigne a name and a nickname for you bot. Check and save the token generated for your bot. You will use it later.
 Now, create a Telegram group and add your new bot to the chat by the name you gave him. 
-To make sure the bot is active and to create a chat_id for this Telegram group, write the following message.
+To make sure the bot is active and to create a chat_id for this Telegram group, follow the next steps:
+1. Copy the token you recieved when createing the bot
+2. OPen this link in your browser with you token on it https://api.telegram.org/bot%<your_bot_token>/getupdates
+3. GO back to Telegram and chat with your bot.
+4. Refresh the page from point 2 and look for your chat id
 
-```
-/my_id @<bot name>
-```
+
 
 Done! You already have a group where you will receive your notifications. You can invite anyone to this group
 
