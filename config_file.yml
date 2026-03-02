@@ -7,7 +7,7 @@ stocks:
   data: 'example_data.csv'
   start: 360
   end: null
-  metric: 'Adj Close'
+  metric: 'Close'
   source: 'yahoo'
 model:
   method: max_sharpe
@@ -37,6 +37,6 @@ strategy:
   ema_crossover: True
   flags_het: 3 # het: higher or equan than
 bot:
-  chat_token: None
-  chat_id: None
+  chat_token: 5325333941:AAHf4xLPRuTqSoTkYZGqtPw4U1sN_OiaaeU
+  chat_id: 492441228
 
