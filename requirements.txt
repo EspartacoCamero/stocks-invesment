@@ -35,4 +35,4 @@ sklearn==0.0
 -e git+https://github.com/EspartacoCamero/stocks-invesment.git@bca0b6358bdac3f88e34c90005f91684cb6270f1#egg=src
 urllib3==1.26.5
 wcwidth==0.1.9
-zipp==1.2.0
+zipp==3.19.1
