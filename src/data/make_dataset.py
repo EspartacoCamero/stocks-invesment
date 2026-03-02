@@ -6,9 +6,9 @@ import numpy as np
 import datetime as dt
 from utils import utils, logger_utils
 import yaml
-from pandas_datareader import data as pdr
+#from pandas_datareader import data as pdr
 import yfinance as yfin
-yfin.pdr_override()
+#yfin.pdr_override()
 
 def main():
     """ Runs data processing scripts to turn raw data from (../raw) into
