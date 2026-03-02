@@ -1,14 +1,20 @@
 # -*- coding: utf-8 -*-
 import os
+import sys
 import logging
+from pathlib import Path
 import pandas as pd
 import numpy as np
 import datetime as dt
 from utils import utils, logger_utils
 import yaml
-from pandas_datareader import data as pdr
+
+try:
+    from src.utils import utils, logger_utils
+except ModuleNotFoundError:
+    sys.path.append(str(Path(__file__).resolve().parents[1]))
+    from utils import utils, logger_utils
 import yfinance as yfin
-yfin.pdr_override()
 
 def main():
     """ Runs data processing scripts to turn raw data from (../raw) into
