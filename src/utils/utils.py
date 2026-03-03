@@ -1,13 +1,10 @@
 from argparse import ArgumentParser
-import pandas_datareader as pdr
 import pandas as pd
 import datetime as dt
 import numpy as np
 import os
-from pandas_datareader import data as pdr
 import yfinance as yfin
 import talib
-yfin.pdr_override()
 
 def get_args():
     """
@@ -23,7 +20,7 @@ def get_args():
     return args
 
 def get_stock_data(stock, start_date, end_date, col='Adj Close'):
-    df = pdr.get_data_yahoo(stock, start=start_date, end=end_date)[col]
+    df = yf.download(stock, start=start_date, end=end_date)
     return df
 
 def filename_maker(name: str, path: str, start_date, end_date) -> str:
@@ -113,7 +110,8 @@ def get_metrics(df, kpi_config) -> pd.DataFrame:
         df_aux['bb_low'] = upper_1sd
         df_aux['bb_mid'] = mid_1sd
         df_aux['bb_up'] = lower_1sd
-        df_clean = df_clean.append(df_aux)
+        #df_clean = df_clean.append(df_aux)
+        df_clean = pd.concat([df_clean, df_aux])
     
     return df_clean
 

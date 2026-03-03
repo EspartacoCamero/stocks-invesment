@@ -7,7 +7,7 @@ stocks:
   data: 'example_data.csv'
   start: 360
   end: null
-  metric: 'Adj Close'
+  metric: 'Close'
   source: 'yahoo'
 model:
   method: max_sharpe
