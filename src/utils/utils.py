@@ -20,7 +20,12 @@ def get_args():
     return args
 
 def get_stock_data(stock, start_date, end_date, col='Adj Close'):
-    df = yf.download(stock, start=start_date, end=end_date)
+    df = yfin.download(stock, start=start_date, end=end_date)
+
+    if isinstance(df.columns, pd.MultiIndex):
+        if col in df.columns.get_level_values(0):
+            return df[col]
+
     return df
 
 def filename_maker(name: str, path: str, start_date, end_date) -> str:

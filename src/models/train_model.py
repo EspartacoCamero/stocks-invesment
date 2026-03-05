@@ -1,9 +1,8 @@
 import pandas as pd
-import logging
 import numpy as np
 import datetime as dt
 from utils import utils, logger_utils
-from scipy.stats import skew, kurtosis, shapiro
+from scipy.stats import shapiro
 import yaml
 import os
 from pypfopt import risk_models
@@ -11,7 +10,7 @@ from pypfopt import expected_returns
 from pypfopt.efficient_frontier import EfficientFrontier
 
 def main():
-    """ Runs the main descriptive stadistict about stocks and also get optimal portafolio
+    """ Runs the main descriptive statistics about stocks and also gets an optimal portfolio
     """
         
     t0 = dt.datetime.now()
@@ -40,20 +39,19 @@ def main():
 
     sp['Date'] = pd.to_datetime(sp['Date'])
     sp.set_index('Date', inplace=True)
-    sp_pc = sp.pct_change().dropna()
 
     weights_np = weights['WEIGHT'].to_numpy()
 
     anual_cov_matrix = df_pc.cov()*252
     volatilidad_por_anual = np.sqrt(np.dot(weights_np.T, np.dot(anual_cov_matrix, weights_np)))
-    logger.info("Anual portafolio volatility is %.2f" % volatilidad_por_anual)
+    logger.info("Annual portfolio volatility is %.2f" % volatilidad_por_anual)
 
     portafolio_anual_return = np.sum(df_pc.mean()*weights_np)*252
-    logger.info("Anual portafolio return is %.2f" % portafolio_anual_return)
+    logger.info("Annual portfolio return is %.2f" % portafolio_anual_return)
 
     
     logger.info("Mean historical return for each stock %s" % round((df_pc.mean()*252),2))
-    logger.info("Anual volatility for each stock %s" % round(np.std(df_pc)*np.sqrt(252),2))
+    logger.info("Annual volatility for each stock %s" % round(np.std(df_pc)*np.sqrt(252),2))
     
     # np.sum(df_pc.mean()*weights['WEIGHT'].to_numpy())*252
     ticks = weights['TICK'].to_list()
@@ -75,7 +73,7 @@ def main():
         annual_vol.append(vol)
         annual_returns.append(rtn)
 
-    logger.info("This is the summary of the stocks regarding the anual return, anual volatility, kurtosis, shapiro and skew.")
+    logger.info("This is the summary of the stocks regarding annual return, annual volatility, kurtosis, shapiro and skew.")
     stocks_summary = pd.DataFrame({'STOCK': ticks,
                                    'SKEW': skew_list,
                                    'KURTOSIS': kurtosis_list,
@@ -86,32 +84,35 @@ def main():
 
     logger.info(stocks_summary)
 
-    logger.info("Lets now calculate the anual covariance between stoks")
+    logger.info("Lets now calculate the annual covariance between stocks")
     cov_matriz = df_pc.cov()*252
     logger.info(cov_matriz)
 
-    logger.info("Using Python Portafolio")
+    logger.info("Using Python Portfolio")
     mu = expected_returns.mean_historical_return(df) 
     sigma = risk_models.sample_cov(df)
-    ef = EfficientFrontier(mu, sigma)
+    ef_max_sharpe = EfficientFrontier(mu, sigma)
     
-    logger.info("Showing portafolio with max sharpe rate")
-    raw_weights_maxsharpe = ef.max_sharpe()
-    cleaned_weights_maxsharpe = ef.clean_weights()
+    logger.info("Showing portfolio with max sharpe rate")
+    ef_max_sharpe.max_sharpe()
+    cleaned_weights_maxsharpe = ef_max_sharpe.clean_weights()
     logger.info(cleaned_weights_maxsharpe)
     # Show portfolio performance 
-    logger.info(ef.portfolio_performance(verbose=True))
+    logger.info(ef_max_sharpe.portfolio_performance(verbose=True))
 
     desire_return = 0.20
-    ef.efficient_return(desire_return)
-    logger.info("Calculating portafolio which should bring a return of  %s" % desire_return)
-    logger.info(ef.clean_weights())
+    ef_target_return = EfficientFrontier(mu, sigma)
+    ef_target_return.efficient_return(desire_return)
+    logger.info("Calculating portfolio which should bring a return of %s" % desire_return)
+    logger.info(ef_target_return.clean_weights())
+    logger.info(ef_target_return.portfolio_performance(verbose=True))
 
-    logger.info("Showing portafolio with lowest risk for a return of %s" % desire_return)
-    raw_weights_minvol = ef.min_volatility()
-    cleaned_weights_minvol = ef.clean_weights()
+    logger.info("Showing portfolio with lowest risk for a return of %s" % desire_return)
+    ef_min_vol = EfficientFrontier(mu, sigma)
+    ef_min_vol.min_volatility()
+    cleaned_weights_minvol = ef_min_vol.clean_weights()
     logger.info(cleaned_weights_minvol)
-    logger.info(ef.portfolio_performance(verbose=True))
+    logger.info(ef_min_vol.portfolio_performance(verbose=True))
 
 
     t1 = dt.datetime.now()

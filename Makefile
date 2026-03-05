@@ -27,7 +27,7 @@ requirements: test_environment
 
 ## Make Dataset
 data: requirements
-	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
+	PYTHONPATH=src $(PYTHON_INTERPRETER) src/data/make_dataset.py config_file.yml
 
 ## Delete all compiled Python files
 clean:

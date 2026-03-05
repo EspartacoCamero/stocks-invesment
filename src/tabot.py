@@ -1,14 +1,10 @@
 #!/usr/bin/python3
-import pandas as pd
 import datetime as dt
 import numpy as np
-import datetime as dt
-from pandas_datareader import data as pdr
-import yfinance as yfin
-yfin.pdr_override()
 import yaml
 from utils import utils, telebot, logger_utils
 import os
+from dotenv import load_dotenv
 
 FILE_PATH = os.path.abspath(os.path.dirname(__file__))
 
@@ -24,7 +20,6 @@ df_input = utils.get_ticks_data(os.path.join(FILE_PATH, 'data/example_data.csv')
 logger.info(logger_path)
 
 start_date, end_date = utils.get_start_end(all_config)
-source = all_config['stocks']['source']
 metric = all_config['stocks']['metric']
 ticks = df_input['TICK'].to_list()
 
@@ -35,7 +30,8 @@ df_clean = utils.get_metrics(df, all_config['model']['kpis'])
 dflags = utils.get_flags(df_clean, all_config['strategy'])
 
 # Telegram Bot
-token = all_config['bot']['chat_token']
+load_dotenv()
+token = os.getenv('API_KEY')
 chat_id = all_config['bot']['chat_id']
 bot = telebot.Tabot(token, chat_id)
 
