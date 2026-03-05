@@ -33,7 +33,6 @@ strategy:
     - True
     - 35  # lt: lower thab
   bbands: True
-  ema_crossover: False
   ema_crossover: True
   flags_het: 3 # het: higher or equan than
 bot:
